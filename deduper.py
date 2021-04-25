@@ -42,7 +42,6 @@ print(f"Found {filenum} items. Processing...", flush=True)
 # generate a hash of each unique uri
 hashes = []
 uniquefiles = []
-i = 1
 for fileitem in filelist:
     if fileitem[1] not in uniquefiles:
         uniquefiles.append(fileitem[1])
@@ -54,11 +53,9 @@ for fileitem in filelist:
                     break
                 md5.update(data)
         hashes.append([format(md5.hexdigest()), fileitem[0], fileitem[1]])
-    if i % 100 == 0:
-        print(f"{i} ", end='', flush=True)
-    i += 1
+        print(f"{format(md5.hexdigest())} {fileitem[1]}", flush=True)
 uniquenum = len(uniquefiles)
-print(f"\nTotal of {uniquenum} hashes generated:", flush=True)
+print(f"{uniquenum} hashes generated from {filenum} items.", flush=True)
 
 # sort by hash
 hashes = sorted(hashes, key = lambda x: x[0])
@@ -68,7 +65,6 @@ prevhash = ''
 keep = []
 move = []
 for hash in hashes:
-    print(f"{hash[0]} {hash[2]}", flush=True)
     if prevhash != hash[0]:
         keep.append(hash)
     else:
