@@ -71,7 +71,7 @@ for hash in hashes:
         move.append(hash)
     prevhash = hash[0]
 
-print(f"Keep {len(keep)}, delete {len(move)}:", flush=True)
+print(f"There are {len(move)} duplicates you can delete.", flush=True)
 
 # iterate thru those we need to move
 for movefile in move:
