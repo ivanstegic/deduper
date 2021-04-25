@@ -1,4 +1,5 @@
 import os, os.path, argparse, sys, hashlib
+from pathlib import Path
 
 # BUF_SIZE is to keep the app from using lots of memory on big files
 BUF_SIZE = 65536  # read stuff in 64kb chunks!
@@ -42,6 +43,7 @@ print(f"Found {filenum} items. Processing...", flush=True)
 # generate a hash of each unique uri
 hashes = []
 uniquefiles = []
+fstot = 0 # file size total
 for fileitem in filelist:
     if fileitem[1] not in uniquefiles:
         uniquefiles.append(fileitem[1])
@@ -54,6 +56,7 @@ for fileitem in filelist:
                 md5.update(data)
         hashes.append([format(md5.hexdigest()), fileitem[0], fileitem[1]])
         print(f"{format(md5.hexdigest())} {fileitem[1]}", flush=True)
+        fstot += Path(fileitem[1]).stat().st_size
 uniquenum = len(uniquefiles)
 print(f"{uniquenum} hashes generated from {filenum} items.", flush=True)
 
@@ -64,14 +67,17 @@ hashes = sorted(hashes, key = lambda x: x[0])
 prevhash = ''
 keep = []
 move = []
+fsdupe = 0
 for hash in hashes:
     if prevhash != hash[0]:
         keep.append(hash)
     else:
         move.append(hash)
+        fsdupe += Path(hash[2]).stat().st_size
     prevhash = hash[0]
 
 print(f"There are {len(move)} duplicates you can delete.", flush=True)
+print(f"{fsdupe} bytes duplicate in {fstot} bytes total.")
 
 # iterate thru those we need to move
 for movefile in move:
