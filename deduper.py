@@ -77,9 +77,10 @@ for hash in hashes:
     prevhash = hash[0]
 
 print(f"There are {len(move)} duplicates you can delete.", flush=True)
-print(f"{fsdupe} bytes duplicate in {fstot} bytes total.")
+print(f"{fsdupe:,} bytes duplicate in {fstot:,} bytes total.")
 
 # iterate thru those we need to move
+print("Use these commands to delete all duplicates:")
 for movefile in move:
     # lastpart = movefile[2][len(movefile[1]):]
     print(f"rm -f '{movefile[2]}'", flush=True)
