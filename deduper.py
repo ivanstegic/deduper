@@ -1,4 +1,4 @@
-import os, os.path, argparse, sys, hashlib
+import os, os.path, argparse, sys, hashlib, pathlib
 from pathlib import Path
 
 # BUF_SIZE is to keep the app from using lots of memory on big files
@@ -45,18 +45,22 @@ hashes = []
 uniquefiles = []
 fstot = 0 # file size total
 for fileitem in filelist:
-    if fileitem[1] not in uniquefiles:
-        uniquefiles.append(fileitem[1])
-        md5 = hashlib.md5()
-        with open(fileitem[1], 'rb') as f:
-            while True:
-                data = f.read(BUF_SIZE)
-                if not data:
-                    break
-                md5.update(data)
-        hashes.append([format(md5.hexdigest()), fileitem[0], fileitem[1]])
-        print(f"{format(md5.hexdigest())} {fileitem[1]}", flush=True)
-        fstot += Path(fileitem[1]).stat().st_size
+    fl = pathlib.Path(fileitem[1])
+    if fl.exists ():
+        if fileitem[1] not in uniquefiles:
+            uniquefiles.append(fileitem[1])
+            md5 = hashlib.md5()
+            with open(fileitem[1], 'rb') as f:
+                while True:
+                    data = f.read(BUF_SIZE)
+                    if not data:
+                        break
+                    md5.update(data)
+            hashes.append([format(md5.hexdigest()), fileitem[0], fileitem[1]])
+            print(f"{format(md5.hexdigest())} {fileitem[1]}", flush=True)
+            fstot += Path(fileitem[1]).stat().st_size
+    else:
+        print(f"Skipping {fileitem[1]}")
 uniquenum = len(uniquefiles)
 print(f"{uniquenum} hashes generated from {filenum} items.", flush=True)
 
