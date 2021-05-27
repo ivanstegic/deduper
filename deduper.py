@@ -60,7 +60,7 @@ for fileitem in filelist:
             print(f"{format(md5.hexdigest())} {fileitem[1]}", flush=True)
             fstot += Path(fileitem[1]).stat().st_size
     else:
-        print(f"Skipping {fileitem[1]}")
+        print(f"Skipped {fileitem[1]}, does not exist.")
 uniquenum = len(uniquefiles)
 print(f"{uniquenum} hashes generated from {filenum} items.", flush=True)
 
